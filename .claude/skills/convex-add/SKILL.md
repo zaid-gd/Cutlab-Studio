@@ -3,11 +3,11 @@ name: convex-add
 description: "Add a capability to the CURRENT Convex app — consults the served Convex capability catalog for always-current procedures (billing, crons, auth, agent, search, …); falls back to built-in hosting or @convex-dev component search. TRIGGER when the user runs /add, or asks to add hosting/publishing or any backend capability to an existing Convex app."
 ---
 
+# add
+
 Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
 
-<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
-
-# add
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Add a named capability to an existing Convex app. Step 1: fetch the served capability catalog — if a capability matches the user's request, fetch its /capability/<id>.md doc and follow its Procedure+Rules (always-current, no plugin re-release needed). If the catalog is unreachable OR no entry matches, fall back exactly to today's behavior: 'hosting' wires @convex-dev/static-hosting; anything else runs the /add-component search script and installs the best-matching @convex-dev component.
 

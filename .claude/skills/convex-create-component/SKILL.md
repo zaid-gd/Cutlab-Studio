@@ -6,9 +6,9 @@ description:
   boundary work.
 ---
 
-Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
-
 # Convex Create Component
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
 
 Create reusable Convex components with clear boundaries and a small app-facing
 API.

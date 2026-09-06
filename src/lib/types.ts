@@ -22,7 +22,8 @@ export const WORKFLOW_STAGE_PURPOSE_VALUES = [
   "approved",
   "delivered",
 ] as const;
-export type WorkflowStagePurpose = (typeof WORKFLOW_STAGE_PURPOSE_VALUES)[number];
+export type WorkflowStagePurpose =
+  (typeof WORKFLOW_STAGE_PURPOSE_VALUES)[number];
 
 export type WorkflowStage = {
   id: string;
@@ -181,15 +182,6 @@ export type SalaryPlan = {
 
 export type SalaryState = {
   batches: SalaryBatch[];
-};
-
-export type Filters = {
-  status: string;
-  workType: string;
-  from: string;
-  to: string;
-  earningsSort: "none" | "high" | "low";
-  colorMode: "status" | "workType";
 };
 
 export type TeamMember = {

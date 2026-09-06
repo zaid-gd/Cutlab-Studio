@@ -31,8 +31,6 @@ const videoEditorProfile: ProfileConfig = {
   salaryBatch: true,
 };
 
-export const profileConfigs: ProfileConfig[] = [videoEditorProfile];
-
 export function getProfile(_profileId?: string | null) {
   return videoEditorProfile;
 }

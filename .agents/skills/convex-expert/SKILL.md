@@ -3,9 +3,9 @@ name: convex-expert
 description: "Consult for unfamiliar Convex backend patterns in an existing Convex project."
 ---
 
-<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
-
 # Convex backend specialist
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Consult this reference for unfamiliar Convex backend patterns. For routine edits, use the relevant existing code and generated project guidance. Follow the local workflow contract before accessing a deployment.
 

@@ -13,7 +13,6 @@ import {
   Clock3,
   Edit3,
   FolderKanban,
-  FolderOpen,
   ListFilter,
   MessageSquareText,
   MoreHorizontal,
@@ -65,7 +64,6 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
-  TableBody,
   TableCaption,
   TableCell,
   TableHead,
@@ -284,20 +282,6 @@ function relativeActivityTime(value: string) {
   return `${Math.round(hours / 24)}d ago`;
 }
 
-function projectColor(project: WorkItem) {
-  const palette = [
-    "var(--media-package-1)",
-    "var(--media-package-2)",
-    "var(--media-package-3)",
-    "var(--media-package-4)",
-    "var(--media-package-5)",
-  ];
-  let hash = 0;
-  for (const char of project.id || project.title)
-    hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-  return palette[hash % palette.length];
-}
-
 /** Muted pastel status chips — scarce color, uppercase meta. */
 function StatusBadge({ status }: { status: WorkItem["status"] }) {
   return (
@@ -371,10 +355,6 @@ export function PrecisionDashboard(props: DashboardProps) {
         const days = daysFromToday(project.dueDate);
         return days >= 0 && days <= 7;
       }),
-      dueSoon: activeProjects
-        .filter((project) => daysFromToday(project.dueDate) >= 0)
-        .sort((a, b) => daysFromToday(a.dueDate) - daysFromToday(b.dueDate))
-        .slice(0, 6),
       waitingReviews: activeProjects.filter(reviewProject),
       blockers: activeProjects.filter(
         (project) =>
@@ -384,8 +364,7 @@ export function PrecisionDashboard(props: DashboardProps) {
       ),
     };
   }, [props.projects]);
-  const { overdue, dueThisWeek, dueSoon, waitingReviews, blockers } =
-    projectSummary;
+  const { overdue, dueThisWeek, waitingReviews, blockers } = projectSummary;
   const salarySize = Math.max(1, Number(props.settings.salaryBatchSize) || 20);
   const pendingSalaryBatch = useMemo(
     () =>

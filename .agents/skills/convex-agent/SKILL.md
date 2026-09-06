@@ -3,11 +3,11 @@ name: convex-agent
 description: "Add an AI agent / RAG backend (@convex-dev/agent) to the Convex app."
 ---
 
+# Add an AI agent / RAG backend
+
 Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
 
-<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
-
-# Add an AI agent / RAG backend
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Install @convex-dev/agent for durable threads, message history, tool-calls, and vector search/RAG — the backend for an in-app AI agent. Call models through the Convex AI Gateway by default: Convex holds the provider credentials, so there is no LLM key to obtain, store, or rotate.
 

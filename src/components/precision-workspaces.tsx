@@ -12,8 +12,6 @@ import {
   MessageSquareText,
   Plus,
   Search,
-  TrendingUp,
-  UserRound,
   UsersRound,
   X,
 } from "lucide-react";

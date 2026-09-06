@@ -33,13 +33,6 @@ import {
   PopoverContent as OwnedPopoverContent,
   PopoverTrigger as OwnedPopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select as OwnedSelect,
-  SelectContent as OwnedSelectContent,
-  SelectItem as OwnedSelectItem,
-  SelectTrigger as OwnedSelectTrigger,
-  SelectValue as OwnedSelectValue,
-} from "@/components/ui/select";
 import { Textarea as OwnedTextarea } from "@/components/ui/textarea";
 import {
   APPROVAL_STATUS_LABELS,

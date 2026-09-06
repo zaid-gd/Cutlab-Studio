@@ -1,6 +1,6 @@
 import { requireProjectAccess } from "./projectAccess";
 import { v } from "convex/values";
-import { query, type MutationCtx, type QueryCtx } from "./_generated/server";
+import { query, type MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { ProjectActivityKind } from "../src/lib/domain-values";
 import { projectActivityKindValidator } from "./domainValidators";

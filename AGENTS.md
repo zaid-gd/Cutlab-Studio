@@ -1,4 +1,4 @@
-## Writing
+# Writing
 
 Use plain words, active voice, and concise explanations. Follow the user's writing preferences.
 

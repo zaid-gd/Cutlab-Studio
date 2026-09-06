@@ -1,4 +1,4 @@
-"""Check or refresh existing Claude mirrors from repository-owned Convex skills."""
+"""Check or refresh Claude mirrors from repository-owned Convex skills."""
 from pathlib import Path
 import argparse
 import sys
@@ -10,13 +10,14 @@ def main():
     root = Path(__file__).resolve().parents[1]
     source = root / ".agents" / "skills"
     target = root / ".claude" / "skills"
-    pairs = [(source / "CONVEX-WORKFLOWS.md", target / "CONVEX-WORKFLOWS.md")]
-    for mirror in sorted(target.glob("convex*/SKILL.md")):
-        original = source / mirror.parent.name / "SKILL.md"
-        pairs.append((original, mirror))
-        original_policy = original.parent / "agents" / "openai.yaml"
-        if original_policy.exists():
-            pairs.append((original_policy, mirror.parent / "agents" / "openai.yaml"))
+    # Compare both trees, including policies and other skill resources. Never
+    # delete target-only files automatically: report the missing source instead.
+    paths = {Path("CONVEX-WORKFLOWS.md")}
+    for tree in (source, target):
+        for directory in tree.glob("convex*"):
+            if directory.is_dir():
+                paths.update(path.relative_to(tree) for path in directory.rglob("*") if path.is_file())
+    pairs = [(source / path, target / path) for path in sorted(paths)]
     missing = [str(a) for a, _ in pairs if not a.is_file()]
     if missing:
         raise SystemExit("Missing source files: " + ", ".join(missing))

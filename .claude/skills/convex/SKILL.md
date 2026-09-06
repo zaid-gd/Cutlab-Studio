@@ -10,7 +10,7 @@ Preserve the existing stack. Consult only the skill relevant to the task:
 - Backend implementation: `convex-expert`.
 - New Convex app: `convex-quickstart`.
 - Add a capability: `convex-add`; authentication setup: `convex-setup-auth`.
-- Read-only review: `convex-reviewer` or `convex-authz` in audit mode.
+- General read-only review: `convex-reviewer` in audit mode. Authorization-focused review: `convex-authz` in audit mode.
 - Behavioral verification: `convex-verify`, using in-memory tests.
 - Performance diagnosis: `convex-performance-audit`; authorized live evidence: `convex-advisor` or `convex-insights`.
 - Schema changes: `convex-migration-helper` for planning, `convex-migrate` for execution, `convex-migrate-rehearse` for an authorized rehearsal.

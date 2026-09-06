@@ -3,9 +3,9 @@ name: convex-improve-convex-plugin
 description: "Share a selected session transcript with the Convex team only on explicit request."
 ---
 
-Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
-
 # Optional transcript feedback
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
 
 This is an explicit sharing workflow, not routine verification or skill maintenance.
 

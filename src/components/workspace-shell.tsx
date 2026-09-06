@@ -291,7 +291,6 @@ export function WorkspaceShell({
   const goChordTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const commandReturnFocusRef = useRef<HTMLElement | null>(null);
   const reduceMotion = useHydratedReducedMotion();
-  const { isSignedIn } = useOptionalAuth();
   const router = useRouter();
   const [collapsed, setCollapsedState] = useState(desktopSidebarCollapsed);
   const setCollapsed = (next: boolean) => {
@@ -364,7 +363,6 @@ export function WorkspaceShell({
     >
       <DesktopSidebar
         page={page}
-        settings={settings}
         starterNavigation={starterNavigation}
         showTeamNavigation={showTeamNavigation}
         collapsed={collapsed}
@@ -497,14 +495,12 @@ export function WorkspaceShell({
 
 function DesktopSidebar({
   page,
-  settings,
   starterNavigation,
   showTeamNavigation,
   collapsed,
   onCollapsedChange,
 }: {
   page: ShellPage;
-  settings: SettingsState;
   starterNavigation: boolean;
   showTeamNavigation: boolean;
   collapsed: boolean;

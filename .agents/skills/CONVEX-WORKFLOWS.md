@@ -1,6 +1,6 @@
 # Local Convex workflow contract
 
-These installed skills include local customizations. Maintain `.agents/skills` as the source and mirror shared Convex files to `.claude/skills` with `scripts/sync-convex-skills.py`. Review upstream changes before regenerating over them.
+These installed skills include local customizations. Maintain `.agents/skills` as the source and mirror shared Convex files to `.claude/skills` with `scripts/sync-convex-skills.py`. The checker compares both trees, including source-only and target-only files; `--apply` creates missing mirrors and refreshes differences, but reports target-only files without deleting them. Review upstream changes before regenerating over them.
 
 ## Scope and completion
 

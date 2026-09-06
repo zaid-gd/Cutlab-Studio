@@ -577,7 +577,6 @@ export function PrecisionCalendar({
                           (item) => item.id === event.projectId
                         );
                         if (!project) return null;
-                        const palette = statusPalette(project.status);
                         return (
                           <motion.div
                             key={event.id}

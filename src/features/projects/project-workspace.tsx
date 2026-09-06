@@ -10,15 +10,7 @@ import { ProjectOutputsPanel } from "@/components/project-outputs-panel";
 import { ProjectPortalPanel } from "@/components/project-portal-panel";
 import { Badge as OwnedBadge } from "@/components/ui/badge";
 import { Button as OwnedButton } from "@/components/ui/button";
-import { FieldLayout } from "@/components/ui/field-layout";
 import { Progress as OwnedProgress } from "@/components/ui/progress";
-import {
-  Select as OwnedSelect,
-  SelectContent as OwnedSelectContent,
-  SelectItem as OwnedSelectItem,
-  SelectTrigger as OwnedSelectTrigger,
-  SelectValue as OwnedSelectValue,
-} from "@/components/ui/select";
 import { Switch as OwnedSwitch } from "@/components/ui/switch";
 import {
   ContentSection,

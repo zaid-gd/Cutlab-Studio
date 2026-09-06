@@ -3,11 +3,11 @@ name: convex-migrate
 description: "Migrate schema + backfill data on a deployed Convex app using @convex-dev/migrations."
 ---
 
+# Migrate the schema / data on a live app
+
 Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
 
-<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
-
-# Migrate the schema / data on a live app
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Change a deployed schema without breaking existing data: stage the schema change, install @convex-dev/migrations, write a backfill that makes old rows valid, run it, and verify before tightening the validator.
 

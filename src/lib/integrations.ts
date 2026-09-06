@@ -69,16 +69,8 @@ export const emptyIntegrationLink: IntegrationLink = {
   updatedAt: "",
 };
 
-export function emptyIntegrationLinks(): IntegrationLinks {
-  return {};
-}
-
 export function integrationServiceById(id: string) {
   return integrationServices.find((service) => service.id === id);
-}
-
-export function integrationServiceName(id: string) {
-  return integrationServiceById(id)?.name ?? id;
 }
 
 export function isIntegrationServiceId(
