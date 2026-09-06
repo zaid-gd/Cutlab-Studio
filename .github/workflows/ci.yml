@@ -15,6 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify Convex skill mirrors
+        run: |
+          python3 scripts/test_sync_convex_skills.py
+          python3 scripts/sync-convex-skills.py
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:

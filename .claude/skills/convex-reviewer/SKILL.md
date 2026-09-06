@@ -1,26 +1,14 @@
 ---
 name: convex-reviewer
-description: "Convex code reviewer — security, auth, validators, performance, and pattern checks for code in a convex/ directory. Use to review or audit Convex functions before shipping."
+description: "Review Convex functions for concrete correctness, access-control and performance defects."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/convex-reviewer.json — do not edit by hand. -->
+# Review Convex code
 
-# Convex Code Reviewer
+Use audit-only mode from [../CONVEX-WORKFLOWS.md](../CONVEX-WORKFLOWS.md) unless fixes were requested.
 
-Structured review of Convex code for security, authorization, validators, performance, and schema design. Applies a Convex-specific checklist and flags anti-patterns with severity (Critical / Important / Suggestion).
+Inspect the changed or requested functions and their callers. Check the actual access policy, identity and ownership flow, argument/return validation, bounded data access, relevant indexes, scheduled work, and error handling. Respect intentionally public operations and authorization implemented in shared helpers.
 
-## Workflow
+Report an unindexed scan when the data size and access pattern make it a material risk; do not classify every filter or missing index as a defect regardless of context. Ground platform-specific claims in generated project guidance, installed types or official docs for the installed version.
 
-1. First pass — Security: verify all public functions check ctx.auth.getUserIdentity(), verify resource ownership before reads/writes, confirm no client-provided user IDs are trusted, confirm scheduled functions target internal.* not api.*.
-2. Second pass — Performance: confirm no .filter() on DB queries (withIndex required), verify all foreign-key fields have indexes, confirm no Date.now() in query handlers, confirm .collect() is not used on unbounded queries.
-3. Third pass — Code quality: confirm args and returns validators on every public function, no any types, promises are awaited, arrays in documents are bounded (<8192 elements).
-4. Report findings grouped by severity; explain why each issue matters and suggest a fix.
-
-## Rules
-
-- Flag missing auth checks as Critical — any unauthenticated public mutation is a data-loss risk.
-- Flag .filter() on DB queries as Important — it is a full table scan.
-- Flag Date.now() in query handlers as Important — it breaks reactivity.
-- Flag missing args or returns validators as Important.
-- Flag scheduling to api.* (not internal.*) as Important.
-- Always explain why a change is needed, not just what to change.
+Return prioritized findings with a triggering case, file reference, consequence and suggested fix. Label uncertain candidates. Use focused local checks where they resolve uncertainty; do not deploy as part of an audit.

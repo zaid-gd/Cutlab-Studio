@@ -71,7 +71,6 @@ import {
   type FileCategory,
   type FileStatus,
   type SettingsTeamRole,
-  type StoredProjectStatus,
   type StoredTeamRole,
 } from "./domain-values";
 
@@ -366,17 +365,6 @@ function booleanRecordSetting(
   for (const key of Object.keys(record)) {
     if (typeof value[key] === "boolean") {
       record[key] = value[key];
-    }
-  }
-  return record;
-}
-
-function stringRecordSetting(value: unknown, fallback: Record<string, string>) {
-  const record = { ...fallback };
-  if (!isPlainRecord(value)) return record;
-  for (const key of Object.keys(record)) {
-    if (typeof value[key] === "string") {
-      record[key] = value[key].trim();
     }
   }
   return record;
@@ -1385,9 +1373,7 @@ interface DataContextValue {
   reconcileSalaryBatches: (items: WorkItem[]) => void;
   updateSalaryBatchPayment: (batchId: string, paid: boolean) => void;
   exportBackup: () => string;
-  importBackup: (
-    source: string
-  ) => Promise<{
+  importBackup: (source: string) => Promise<{
     projects: number;
     clients: number;
     projectGroups: number;

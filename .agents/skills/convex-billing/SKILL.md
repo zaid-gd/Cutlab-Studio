@@ -3,9 +3,11 @@ name: convex-billing
 description: "Add Stripe billing/payments to the Convex app via @convex-dev/stripe (checkout + webhook + gating)."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/billing.json — do not edit by hand. -->
-
 # Add billing / payments
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Wire Stripe to Convex using @convex-dev/stripe: a checkout action, an httpAction webhook registered by the component (signature-verified automatically), subscription state stored in the component's tables, and server-side gating via a query.
 

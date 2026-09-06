@@ -4,17 +4,15 @@ import {
   createContext,
   Fragment,
   useCallback,
-  useContext,
   useEffect,
   useId,
   useMemo,
   useRef,
   useState,
-  type RefObject,
 } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { UserProfile, useAuth } from "@clerk/nextjs";
-import { useAction, useConvexAuth, useMutation, useQuery } from "convex/react";
+import { UserProfile } from "@clerk/nextjs";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { makeFunctionReference } from "convex/server";
 import {
   useData,
@@ -23,7 +21,6 @@ import {
 } from "@/lib/data-context";
 import { useOptionalAuth } from "@/lib/optional-auth";
 import { api } from "../../convex/_generated/api";
-import type { Id } from "../../convex/_generated/dataModel";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DEFAULT_PROFILE_ID, getProfile } from "@/lib/profiles";
@@ -48,23 +45,13 @@ import {
   workflowStagesFromLabels,
 } from "@/lib/workflow-templates";
 import {
-  APPROVAL_STATUS_LABELS,
-  CLIENT_PORTAL_STAGE_VALUES,
-  DELIVERABLE_STATUS_VALUES,
-  FILE_CATEGORY_VALUES,
-  FILE_STATUS_VALUES,
   PROJECT_STATUS_VALUES,
-  REVISION_STATUS_VALUES,
   TEAM_ROLE_VALUES,
-  type ClientPortalStage,
-  type DeliverableStatus,
   type FileCategory,
   type FileStatus,
   type ProjectStatus,
-  type RevisionStatus,
   type SettingsTeamRole,
   type StoredTeamRole,
-  approvalStatusLabel,
 } from "@/lib/domain-values";
 import type {
   IntegrationLink,
@@ -75,10 +62,7 @@ import {
   PROJECT_TEMPLATES,
   type ProjectTemplate,
 } from "@/lib/project-templates";
-import {
-  normalizeOptionalTimecode,
-  TIMECODE_FORMAT_HINT,
-} from "@/lib/timecode";
+import { normalizeOptionalTimecode } from "@/lib/timecode";
 import {
   configuredIntegrationCount,
   emptyIntegrationLink,
@@ -139,8 +123,6 @@ import {
   PrecisionReports,
 } from "@/components/precision-workspaces";
 import { PrecisionMedia } from "@/components/precision-media";
-import { ProjectOutputsPanel } from "@/components/project-outputs-panel";
-import { ProjectPortalPanel } from "@/components/project-portal-panel";
 import { SalaryPlansPanel } from "@/components/salary-plans-panel";
 import { FirstRunChecklist } from "@/components/first-run-checklist";
 import { SampleModeBar } from "@/components/sample-mode-bar";
@@ -163,7 +145,6 @@ import {
   type AnalyticsConsent,
 } from "@/lib/telemetry";
 import { cn } from "@/lib/utils";
-import { projectStatusTone } from "@/lib/project-status-style";
 import {
   AlertDialog as OwnedAlertDialog,
   AlertDialogAction as OwnedAlertDialogAction,
@@ -210,23 +191,9 @@ const workspaceDiscoveryApi = {
     { outputs: WorkspaceOutput[]; files: WorkspaceFile[] }
   >("workspaceDiscovery:list"),
 };
-import {
-  Accordion as OwnedAccordion,
-  AccordionContent as OwnedAccordionContent,
-  AccordionItem as OwnedAccordionItem,
-  AccordionTrigger as OwnedAccordionTrigger,
-} from "@/components/ui/accordion";
 import { Badge as OwnedBadge } from "@/components/ui/badge";
 import { Button as OwnedButton } from "@/components/ui/button";
 import { Card as OwnedCard } from "@/components/ui/card";
-import {
-  Command as OwnedCommand,
-  CommandEmpty as OwnedCommandEmpty,
-  CommandGroup as OwnedCommandGroup,
-  CommandInput as OwnedCommandInput,
-  CommandItem as OwnedCommandItem,
-  CommandList as OwnedCommandList,
-} from "@/components/ui/command";
 import {
   Dialog as OwnedDialog,
   DialogContent as OwnedDialogContent,
@@ -242,7 +209,6 @@ import {
   PopoverContent as OwnedPopoverContent,
   PopoverTrigger as OwnedPopoverTrigger,
 } from "@/components/ui/popover";
-import { Progress as OwnedProgress } from "@/components/ui/progress";
 import {
   Select as OwnedSelect,
   SelectContent as OwnedSelectContent,
@@ -250,17 +216,14 @@ import {
   SelectTrigger as OwnedSelectTrigger,
   SelectValue as OwnedSelectValue,
 } from "@/components/ui/select";
-import { Skeleton as OwnedSkeleton } from "@/components/ui/skeleton";
 import { Switch as OwnedSwitch } from "@/components/ui/switch";
 import { Textarea as OwnedTextarea } from "@/components/ui/textarea";
 import {
   BadgeDollarSign,
   Bell,
   Building2,
-  CalendarDays,
   Check,
   CircleCheckBig,
-  ChevronsUpDown,
   Clock3,
   Cloud,
   Copy,
@@ -280,10 +243,8 @@ import {
   Play,
   Plug,
   Plus,
-  RefreshCw,
   Send,
   Share2,
-  SlidersHorizontal,
   Trash2,
   Unplug,
   Upload,
@@ -315,12 +276,9 @@ const headingFont = relay.font.heading;
 const defaultAccent = relay.color.teal;
 const accent = `var(--app-accent, ${relay.color.teal})`;
 const ink = `var(--app-ink, ${relay.color.softWhite})`;
-const muted = "var(--app-muted)";
 const border = "var(--app-border)";
-const panel = `var(--app-panel, ${relay.color.graphite})`;
 const canvas = `var(--app-canvas, ${relay.color.charcoal})`;
 const activeBg = "var(--app-active, rgba(45,140,151,0.18))";
-const avatarSurface = `var(--app-avatar-surface, ${relay.color.slate})`;
 const successColor = `var(--app-success, ${relay.color.success})`;
 const warningColor = `var(--app-warning, ${relay.color.warning})`;
 
@@ -402,9 +360,6 @@ type ToastState = {
 const profile = getProfile(DEFAULT_PROFILE_ID);
 
 const statusOptions: ProjectStatus[] = [...PROJECT_STATUS_VALUES];
-// Upcoming capability: keep R2 disabled until the storage release is approved.
-const R2_STORAGE_ENABLED = false;
-const MAX_SAFE_PROJECT_FILE_BYTES = 20_000_000;
 
 const teamRoleOptions = [...TEAM_ROLE_VALUES];
 const currencyOptions = ["USD", "EUR", "GBP", "INR", "AED", "SAR"];
@@ -524,10 +479,6 @@ const defaultSettings: SettingsState = {
 };
 
 const SettingsContext = createContext<SettingsState>(defaultSettings);
-
-function useTrackerSettings() {
-  return useContext(SettingsContext);
-}
 
 const emptyForm = (): WorkItem => ({
   id: "",
@@ -820,10 +771,6 @@ export function TrackerApp({
         .filter((client) => !client.archived)
         .map((client) => client.name),
     [clientRecords]
-  );
-  const clientFilterOptions = useMemo(
-    () => ["ALL", ...clientOptions],
-    [clientOptions]
   );
   const workflowTemplates = useMemo(
     () => [...PROJECT_TEMPLATES, ...settings.customProjectTemplates],
@@ -1670,11 +1617,7 @@ export function TrackerApp({
     ) : page === "subscription" ? (
       <SubscriptionPage />
     ) : page === "profile" ? (
-      <ProfileDesignPage
-        projects={personalProjects}
-        stats={stats}
-        settings={settings}
-      />
+      <ProfileDesignPage projects={personalProjects} settings={settings} />
     ) : page === "profile-edit" ? (
       <ProfileEditPage settings={settings} setSettings={setSettings} />
     ) : (
@@ -5543,22 +5486,6 @@ function SettingsDesignPage({
     }
   }
 
-  function formatTimestamp(iso: string) {
-    if (!iso) return "";
-    try {
-      const date = new Date(iso);
-      return new Intl.DateTimeFormat("en", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(date);
-    } catch {
-      return "";
-    }
-  }
-
   return (
     <WorkspacePage family="administration" mode="fill">
       <PageHeader
@@ -6503,11 +6430,9 @@ function OrganizationStatusBadge({ status }: { status: string }) {
 
 function ProfileDesignPage({
   projects,
-  stats,
   settings,
 }: {
   projects: WorkItem[];
-  stats: { active: number; delivered: number; avgTurnaroundDays: number };
   settings: SettingsState;
 }) {
   const { isSignedIn } = useData();
@@ -7461,16 +7386,6 @@ function projectTimelineColor(status: string) {
   if (status === "Planned") return "var(--app-highlight)";
   return warningColor;
 }
-
-function profileThumbColor(index: number) {
-  return [
-    "var(--decorative-thumb-1)",
-    "var(--decorative-thumb-2)",
-    "var(--decorative-thumb-3)",
-    "var(--decorative-thumb-4)",
-    "var(--decorative-thumb-5)",
-  ][index % 5];
-}
 function EmptyPanel({
   title,
   body,
@@ -7503,16 +7418,6 @@ function EmptyPanel({
       </p>
       {action ? <div className="mt-4">{action}</div> : null}
     </div>
-  );
-}
-
-function TimecodeChip({ value }: { value?: string | null }) {
-  if (!value) return null;
-  return (
-    <span className="mt-1.5 inline-flex h-[23px] items-center gap-1 rounded-[5px] bg-[var(--app-active)] px-2 text-xs font-semibold text-[var(--app-accent)]">
-      <Clock3 aria-hidden="true" className="size-3.5" />
-      {value}
-    </span>
   );
 }
 
@@ -7571,110 +7476,6 @@ function initials(value: string) {
   );
 }
 
-function projectProgress(status: string) {
-  if (isDoneStatus(status)) return 100;
-  if (status === "In Progress") return 60;
-  if (status === "Planned") return 25;
-  return 10;
-}
-
-function projectPriority(project: WorkItem) {
-  if (isDoneStatus(project.status)) return "Done";
-  if (dueBucket(project) === "Overdue") return "High";
-  if (dueBucket(project) === "This Week") return "Med";
-  return "Low";
-}
-
-function ClientInfoRow({
-  icon,
-  text,
-}: {
-  icon: React.ReactNode;
-  text: string;
-}) {
-  return (
-    <div className="flex min-w-0 items-center gap-2 text-[var(--app-muted)]">
-      <span
-        aria-hidden="true"
-        className="grid w-5 shrink-0 place-items-center [&_svg]:size-[17px]"
-      >
-        {icon}
-      </span>
-      <span className="truncate text-[13px]">{text}</span>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  helper,
-  icon,
-}: {
-  label: string;
-  value: string;
-  helper: string;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <OwnedCard className="flex min-h-[108px] flex-row items-center gap-3 p-4 shadow-sm">
-      {icon ? (
-        <span className="grid size-10 shrink-0 place-items-center rounded-md bg-primary/10 text-primary [&_svg]:size-5">
-          {icon}
-        </span>
-      ) : null}
-      <div className="min-w-0">
-        <dt className="truncate text-[13px] font-semibold text-muted-foreground">
-          {label}
-        </dt>
-        <dd className="mt-1 truncate text-2xl font-bold leading-none tabular-nums">
-          {value}
-        </dd>
-        <p className="mt-2 truncate text-xs text-muted-foreground">{helper}</p>
-      </div>
-    </OwnedCard>
-  );
-}
-
-function CompactSelect({
-  value,
-  options,
-  labels,
-  onChange,
-  width = 104,
-}: {
-  value: string;
-  options: string[];
-  labels?: Record<string, string>;
-  onChange: (value: string) => void;
-  width?: number | string;
-}) {
-  const normalizedOptions = [
-    ...new Set(options.filter((option) => option.trim())),
-  ];
-  if (value && !normalizedOptions.includes(value))
-    normalizedOptions.unshift(value);
-
-  return (
-    <OwnedSelect value={value} onValueChange={onChange}>
-      <OwnedSelectTrigger
-        size="sm"
-        className="h-[33px] rounded-[5px] border-[var(--app-border)] bg-[var(--app-panel)] text-[13px] text-[var(--app-ink)] hover:border-[var(--app-accent)]"
-        style={{ width, minWidth: width }}
-      >
-        <OwnedSelectValue>{labels?.[value] ?? value}</OwnedSelectValue>
-      </OwnedSelectTrigger>
-      <OwnedSelectContent position="popper">
-        {normalizedOptions.map((option) => (
-          <OwnedSelectItem key={option} value={option}>
-            {labels?.[option] ?? option}
-          </OwnedSelectItem>
-        ))}
-      </OwnedSelectContent>
-    </OwnedSelect>
-  );
-}
-
 function dueBucket(project: WorkItem): DueFilter {
   if (isDoneStatus(project.status)) return "Delivered";
   const due = new Date(`${project.dueDate}T00:00:00`);
@@ -7683,53 +7484,6 @@ function dueBucket(project: WorkItem): DueFilter {
   const weekEnd = new Date(today);
   weekEnd.setDate(weekEnd.getDate() + 7);
   return due.getTime() <= weekEnd.getTime() ? "This Week" : "ALL";
-}
-
-function calendarMonthDays(month: Date, weekStart: string) {
-  const first = new Date(month.getFullYear(), month.getMonth(), 1);
-  const start = new Date(first);
-  const startIndex = weekdayIndex(weekStart);
-  const offset = (first.getDay() - startIndex + 7) % 7;
-  start.setDate(first.getDate() - offset);
-  return Array.from({ length: 42 }, (_, index) => {
-    const date = new Date(start);
-    date.setDate(start.getDate() + index);
-    return { date };
-  });
-}
-
-function orderedWeekdays(weekStart: string) {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const start = weekdayIndex(weekStart);
-  return [...days.slice(start), ...days.slice(0, start)];
-}
-
-function weekdayIndex(day: string) {
-  const index = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(day);
-  return index >= 0 ? index : 1;
-}
-
-function statusPalette(status: string) {
-  if (isDoneStatus(status))
-    return { fg: "var(--app-success)", bg: "var(--app-success-bg)" };
-  if (status === "In Progress")
-    return { fg: "var(--app-warning)", bg: "var(--app-warning-bg)" };
-  if (status === "Cancelled")
-    return { fg: "var(--app-danger)", bg: "var(--app-danger-bg)" };
-  return { fg: accent, bg: activeBg };
-}
-
-function StatusChip({ status }: { status: string }) {
-  const palette = statusPalette(status);
-
-  return (
-    <span
-      className="inline-flex h-6 shrink-0 items-center rounded-[5px] px-2 text-xs font-semibold"
-      style={{ backgroundColor: palette.bg, color: palette.fg }}
-    >
-      {status}
-    </span>
-  );
 }
 
 function checklistItemKey(item: string, index: number) {
@@ -7878,16 +7632,6 @@ function AnalyticsConsentDialog({
   );
 }
 
-function toDateTimeLocal(value?: string | null) {
-  if (!value) return "";
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return "";
-  const localTime = new Date(
-    date.getTime() - date.getTimezoneOffset() * 60_000
-  );
-  return localTime.toISOString().slice(0, 16);
-}
-
 function validateProject(
   item: WorkItem,
   type: WorkTypeConfig,
@@ -7948,25 +7692,6 @@ function isValidUrl(value: string) {
 function isValidProfileImageSource(value: string) {
   const trimmed = value.trim();
   return trimmed.startsWith("data:image/") || isValidUrl(trimmed);
-}
-
-function validateIntegrationConfig(name: string, config: IntegrationConfig) {
-  if (!config.account.trim()) return "Account email or name is required.";
-  if (requiresAccountEmail(name) && !isValidEmail(config.account)) {
-    return "Enter a valid account email address.";
-  }
-  if (
-    name === "Slack" &&
-    config.webhookUrl.trim() &&
-    !isValidUrl(config.webhookUrl)
-  ) {
-    return "Enter a valid webhook URL or leave it blank.";
-  }
-  return "";
-}
-
-function requiresAccountEmail(name: string) {
-  return name === "Google Drive";
 }
 
 function projectStageIssues(stages: string[]) {
@@ -8097,26 +7822,6 @@ function canonicalWorkType(value: string, options: string[]) {
   );
 }
 
-function buildClientOptions(projects: WorkItem[], savedClients: string[] = []) {
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const savedClient of savedClients) {
-    const client = savedClient.trim();
-    const key = client.toLowerCase();
-    if (!client || seen.has(key)) continue;
-    seen.add(key);
-    result.push(client);
-  }
-  for (const project of projects) {
-    const client = project.client?.trim();
-    const key = client?.toLowerCase();
-    if (!client || !key || seen.has(key)) continue;
-    seen.add(key);
-    result.push(client);
-  }
-  return result.sort((a, b) => a.localeCompare(b));
-}
-
 function findExistingClientName(value: string, clientOptions: string[]) {
   const key = value.trim().toLowerCase();
   if (!key) return "";
@@ -8134,16 +7839,6 @@ function canonicalClientName(
   return existing && forceExistingCapitalization ? existing : trimmed;
 }
 
-function clientSuggestionText(value: string, clientOptions: string[]) {
-  const trimmed = value.trim();
-  const existing = findExistingClientName(trimmed, clientOptions);
-  if (existing && existing !== trimmed)
-    return `Will use existing client "${existing}" instead of creating a duplicate.`;
-  return clientOptions.length
-    ? "Select an existing client or type a new client name."
-    : "Typing a client name creates it when the project is saved.";
-}
-
 function createId() {
   return (
     window.crypto?.randomUUID?.() ??
@@ -8157,14 +7852,6 @@ function createdTime(item: WorkItem) {
   const legacyMatch = item.id.match(/^item-(\d+)/);
   if (legacyMatch) return Number(legacyMatch[1]);
   return dateTime(item.dueDate);
-}
-
-function fallbackCreatedAt(id: unknown, dueDate: string) {
-  if (typeof id === "string") {
-    const legacyMatch = id.match(/^item-(\d+)/);
-    if (legacyMatch) return new Date(Number(legacyMatch[1])).toISOString();
-  }
-  return new Date(dateTime(dueDate)).toISOString();
 }
 
 function safeMoneyValue(value: unknown) {
@@ -8183,12 +7870,6 @@ function iso(date: Date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
 }
 
 function isIsoDate(value: string) {
@@ -8270,43 +7951,6 @@ function publicProfileSlug(settings: SettingsState) {
 function publicMetric(value: unknown, fallback = 0) {
   const number = typeof value === "number" ? value : Number(value);
   return Number.isFinite(number) && number >= 0 ? Math.floor(number) : fallback;
-}
-
-function ProfileAvatar({
-  settings,
-  size,
-  fontSize,
-}: {
-  settings: SettingsState;
-  size: number;
-  fontSize: number;
-}) {
-  const imageUrl = settings.profileImageUrl.trim();
-  const displayName = profileDisplayName(settings);
-
-  return (
-    <span
-      className="grid shrink-0 place-items-center overflow-hidden rounded-full border font-semibold"
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: avatarSurface,
-        borderColor: border,
-        color: ink,
-        fontSize,
-      }}
-    >
-      {imageUrl ? (
-        <img
-          className="size-full object-cover"
-          src={imageUrl}
-          alt={displayName}
-        />
-      ) : (
-        initials(settings.profileName)
-      )}
-    </span>
-  );
 }
 
 function money(value: number, currencyCode = defaultSettings.currencyCode) {

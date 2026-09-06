@@ -3,9 +3,9 @@ name: convex-verify
 description: "Prove a Convex feature works — seed, drive as multiple mocked users via convex-test, assert behavior including the negative authz cases (wrong user refused, data-scope enforced)."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/convex-verify.json — do not edit by hand. -->
-
 # Prove a feature works — seed, drive, assert
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 A green typecheck proves the code parses; it does not prove a non-owner is actually denied, that a query returns the right rows, or that a mutation has the effect it claims. This capability closes that gap with the loop the whole field is missing: seed → drive → assert, run in-process with `convex-test` so it needs no deployment. Its highest-value assertions are the NEGATIVE ones — the caller who should be refused — because those are exactly the authz defects the 30-app corpus shows are the #1 real bug and the ones a happy-path demo never catches.
 
@@ -19,7 +19,7 @@ A green typecheck proves the code parses; it does not prove a non-owner is actua
    - positive: the owner gets the expected rows / the mutation made the expected change (`expect(await t.withIdentity(owner).query(api.x.y, args)).toEqual(...)`).
    - NEGATIVE (the load-bearing half): a different user calling the same function is REFUSED — `await expect(t.withIdentity(other).mutation(api.x.cancel, {id})).rejects.toThrow(/forbidden|not authorized|403/)` — and an unauthenticated caller is refused where auth is required. A feature is not proven until the wrong caller is shown to be blocked.
    - data-scope: a list/query returns ONLY the caller's rows, never the second user's (assert the second user's row is absent).
-6. RUN the tests (`npx vitest run`) and report: what was proven (each positive + negative assertion that passed), and — critically — any assertion that FAILED, because a failed negative assertion is a real authz hole found before ship. Emit findings on the bus (specs/finding.schema.json, class authz/correctness, evidence kind probe-result with the exact failing call) for anything that didn't behave.
+6. RUN the tests (`pnpm exec vitest run`) and report: what was proven (each positive + negative assertion that passed), and — critically — any assertion that FAILED, because a failed negative assertion is a real authz hole found before ship. Report findings using the fields defined in [../CONVEX-WORKFLOWS.md](../CONVEX-WORKFLOWS.md): title, class, severity, confidence, identity, locus, evidence, and suggestedFix (class authz/correctness; evidence kind probe-result with the exact failing call) for anything that didn't behave.
 7. Do NOT weaken a test to make it pass: if the owner-only query returns another user's row, the FIX is in the function (hand to convex-authz), not in the assertion. A test changed until it's green proves nothing.
 
 ## Rules
@@ -30,5 +30,5 @@ A green typecheck proves the code parses; it does not prove a non-owner is actua
 - A vitest.config.ts with environment 'edge-runtime' + convex-test inlined is REQUIRED for convex-test to run (import.meta.glob needs it); author it, don't just author the test file.
 - Run in-process with convex-test — no deployment needed; compose with the `test` capability's setup rather than forking it.
 - Never weaken an assertion to make it pass: a failing negative test is a real defect → hand the fix to convex-authz/convex-expert, don't edit the test until it's green.
-- Emit a bus finding for any assertion that failed (authz/correctness, evidence: the failing probe call) so a composite pass or self-heal can pick it up.
+- Report every failed assertion in the caller's local report using the fields defined in [../CONVEX-WORKFLOWS.md](../CONVEX-WORKFLOWS.md) (class authz/correctness, evidence kind probe-result with the exact failing call) so a composite pass or self-heal can pick it up.
 - This drives a SPECIFIC built feature; a request to set up a test framework generally is the `test` capability.

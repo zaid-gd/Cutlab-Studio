@@ -67,7 +67,6 @@ export const LEGACY_FILE_STATUS_VALUES = [
   "Delivered",
 ] as const;
 export type LegacyFileStatus = (typeof LEGACY_FILE_STATUS_VALUES)[number];
-export type StoredFileStatus = FileStatus | LegacyFileStatus;
 
 export function normalizeFileStatus(value: unknown): FileStatus {
   if (typeof value !== "string") return "draft";
@@ -107,7 +106,6 @@ export type StoredTeamRole = TeamRole | LegacyTeamRole;
 export type SettingsTeamRole = StoredTeamRole | "";
 
 export const MEMBER_STATUS_VALUES = ["invited", "active"] as const;
-export type MemberStatus = (typeof MEMBER_STATUS_VALUES)[number];
 
 export const CLIENT_PORTAL_STAGE_VALUES = [
   "Planning",
@@ -128,8 +126,6 @@ export const LEGACY_DELIVERABLE_STATUS_VALUES = [
 ] as const;
 export type LegacyDeliverableStatus =
   (typeof LEGACY_DELIVERABLE_STATUS_VALUES)[number];
-export type StoredDeliverableStatus =
-  DeliverableStatus | LegacyDeliverableStatus;
 
 export function normalizeDeliverableStatus(value: unknown): DeliverableStatus {
   if (typeof value !== "string") return "draft";
@@ -147,7 +143,6 @@ export const REVISION_STATUS_VALUES = [
   "In Review",
   "Resolved",
 ] as const;
-export type RevisionStatus = (typeof REVISION_STATUS_VALUES)[number];
 
 export const NOTIFICATION_KIND_VALUES = [
   "mention",

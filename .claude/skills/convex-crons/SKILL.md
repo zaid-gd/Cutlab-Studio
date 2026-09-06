@@ -3,9 +3,11 @@ name: convex-crons
 description: "Add recurring scheduled jobs (crons) to the Convex app."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/crons.json — do not edit by hand. -->
-
 # Add scheduled jobs (crons)
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Define recurring jobs in convex/crons.ts targeting internal functions, with sane intervals and idempotent handlers.
 

@@ -1,6 +1,6 @@
 import { requireProjectVisibility } from "./projectAccess";
 import { v } from "convex/values";
-import type { Id, Doc } from "./_generated/dataModel";
+import type { Doc } from "./_generated/dataModel";
 import {
   mutation,
   query,
@@ -11,7 +11,6 @@ import { projectPortalStatusValidator } from "./domainValidators";
 import { resolveWorkspaceEntitlements } from "./workspaceSubscriptions";
 
 type FunctionCtx = QueryCtx | MutationCtx;
-type PortalStatus = "draft" | "open" | "closed";
 type PublicAccess =
   | "active"
   | "unpublished"

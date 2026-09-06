@@ -3,9 +3,11 @@ name: convex-seed
 description: "Seed or import data into the Convex database."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/seed.json — do not edit by hand. -->
-
 # Seed / import data
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Populate tables via an internalMutation seed function (re-runnable) or `npx convex import`, matching the schema.
 

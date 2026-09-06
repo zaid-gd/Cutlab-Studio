@@ -19,7 +19,6 @@ import type {
   PortalEventKind,
 } from "../src/lib/domain-values";
 import {
-  approvalStatusLabel,
   isClientSafeApprovalStatus,
   normalizeDeliverableStatus,
   normalizeFileStatus,
@@ -639,7 +638,7 @@ export const publish = mutation({
 export const setPublished = mutation({
   args: { portalId: v.id("clientPortals"), published: v.boolean() },
   handler: async (ctx, args) => {
-    const { portal, identity, project } = await requireEditablePortal(
+    const { identity, project } = await requireEditablePortal(
       ctx,
       args.portalId
     );

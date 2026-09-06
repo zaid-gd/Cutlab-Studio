@@ -3,9 +3,11 @@ name: convex-docs
 description: "Pull version-current Convex docs for the version this project uses — pin the installed version, fetch page-as-markdown or check node_modules types, freshness hierarchy — instead of writing a possibly-stale API from memory."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/convex-docs.json — do not edit by hand. -->
-
 # Pull version-current Convex docs
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 convex-expert carries baked, plugin-versioned knowledge — excellent for stable idioms, but it goes stale exactly where it hurts: a component that gained a new export, a CLI flag that changed, an API renamed between versions. This capability is the freshness discipline layered on top: pin to the project's real version, fetch the live page cheaply as markdown, and never write an unfamiliar API from memory when the current source is one fetch away.
 

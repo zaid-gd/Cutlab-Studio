@@ -3,9 +3,11 @@ name: convex-sentinel
 description: "Set up Sentinel production error capture in your own Convex deployment."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/sentinel.json — do not edit by hand. -->
-
 # Capture production errors in your own deployment
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Install `@convex-dev/sentinel` to capture production errors (server function failures, client JS/React crashes, OCC and scale signals) into a table in the user's OWN deployment, redacted at write time, then react to new ones. Data never leaves the user's deployment.
 

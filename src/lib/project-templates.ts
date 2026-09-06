@@ -18,7 +18,6 @@ export const PROJECT_TEMPLATE_IDS = [
 ] as const;
 
 export type ProjectTemplateId = (typeof PROJECT_TEMPLATE_IDS)[number];
-export type ProjectTemplateWorkType = "channel" | "freelance";
 
 export type ProjectTemplateDeliverable = {
   title: string;
@@ -302,10 +301,6 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     ],
   },
 ];
-
-export function getProjectTemplate(id: ProjectTemplateId) {
-  return PROJECT_TEMPLATES.find((template) => template.id === id);
-}
 
 export function templateNotes(template: ProjectTemplate) {
   return [

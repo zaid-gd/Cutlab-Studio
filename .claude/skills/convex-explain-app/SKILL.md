@@ -3,9 +3,11 @@ name: convex-explain-app
 description: "Explain an existing Convex app — data model + relationships, public vs internal functions, auth/ownership model, components, a request→data flow — read from the schema and function surface. Read-only."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/explain-app.json — do not edit by hand. -->
-
 # Explain this Convex app
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Before you can safely change an app you have to know what it is — and reading 15 function files top-to-bottom is slow and error-prone. This capability produces the map fast and accurately by reading the two sources that can't lie: the schema (the data model) and the function surface (`functionSpec` / the exported queries/mutations/actions). It is deliberately DESCRIPTIVE — it explains what IS, hands judgment to the audit capabilities and changes to the fixers. It is also the natural first step of an optimize or self-heal session, and the reusable 're-explain the current architecture' that 'change what you built' depends on.
 

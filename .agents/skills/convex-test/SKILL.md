@@ -3,9 +3,11 @@ name: convex-test
 description: "Generate convex-test tests for the app's Convex functions."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/test.json — do not edit by hand. -->
-
 # Generate Convex tests
+
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Maintain .agents/skills as the source; refresh .claude/skills mirrors with scripts/sync-convex-skills.py. -->
 
 Use convex-test + vitest to test functions against an in-memory backend: args/returns, auth paths, indexes, and scheduled functions.
 

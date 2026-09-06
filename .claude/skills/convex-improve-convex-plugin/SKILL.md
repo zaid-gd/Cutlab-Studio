@@ -1,24 +1,16 @@
 ---
 name: convex-improve-convex-plugin
-description: "Send this coding session's transcript to the Convex team for an AI post-mortem that improves the quickstart system."
+description: "Share a selected session transcript with the Convex team only on explicit request."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/improve-convex-plugin.json — do not edit by hand. -->
+# Optional transcript feedback
 
-# improve-convex-plugin
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
 
-Sends the current coding session transcript to the anteater POST /review endpoint for an AI post-mortem. The review returns structured findings (ambiguous instructions, agent-stuck patterns, tooling failures, wins) targeted at the runbook, bootstrap script, skills, and components — not end-user data. Sharing is opt-in: the anteater-served helper asks once (Always / Just this once / Never) and remembers the choice.
+This is an explicit sharing workflow, not routine verification or skill maintenance.
 
-## Workflow
+Identify the exact transcript scope, destination and purpose from the user's request. Inspect and redact the proposed payload locally. Obtain any missing authorization before transmitting it; a helper's stored preference does not expand the current request's scope.
 
-1. Run the anteater-served helper: `curl -fsSL "<anteater>/send-transcript" | bash -s -- --idea "<one-line app idea from this session>"`.
-2. If it prints CONSENT_REQUIRED (exit 4), the user has not chosen yet — ask them to share Always, Just this once, or Never, then re-run appending --consent always|once|never. Do not send until they answer.
-3. Watch for output markers: REVIEW_SOURCE (transcript found), REVIEW_SUBMITTED id=... (accepted), REVIEW_DONE status=done (findings ready).
-4. Summarize the highest-severity findings for the user: title → target → suggestedFix, then wins. Keep the summary about the system, not the user's data.
+Resolve the helper from a verified source, download it for inspection and confirm its behavior before execution. Do not pipe a fetched script directly into a shell or run it merely to discover whether it asks for consent. If the helper or endpoint cannot be verified, stop this optional sharing task and explain what is missing.
 
-## Rules
-
-- Never send a transcript until the user has explicitly chosen to share (the helper prints CONSENT_REQUIRED and exits until they do).
-- REVIEW_NO_TRANSCRIPT means no Claude/Codex .jsonl was found — tell the user.
-- Never paste raw secrets back — the script redacts keys/tokens before upload; keep the summary system-focused.
-- This is a system-improvement loop, not end-user feature feedback.
+Report only the actual submission result and returned findings. Never expose secrets or claim a transcript was sent without an observed successful result.

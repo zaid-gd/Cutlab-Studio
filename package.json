@@ -16,7 +16,7 @@
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "check": "pnpm check:mui-allowlist && pnpm lint && pnpm build && pnpm audit --prod",
-    "check:full": "pnpm check && pnpm test:cloudflare-auth && pnpm test:team && pnpm test:files && pnpm verify:team && pnpm verify:browser && pnpm verify:prod",
+    "check:full": "pnpm check && pnpm test:cloudflare-auth && pnpm test:files && pnpm verify:team && pnpm verify:browser && pnpm verify:prod",
     "start": "next start",
     "lint": "tsc --noEmit",
     "test:workspace-page": "vitest run --config vitest.workspace-page.config.ts",

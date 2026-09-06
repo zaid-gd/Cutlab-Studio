@@ -4,8 +4,6 @@ import { getProjectProgress } from "@/features/projects/project-domain";
 
 import {
   ArrowRight,
-  CalendarDays,
-  CheckCircle2,
   Archive,
   Edit3,
   Film,
@@ -16,7 +14,6 @@ import {
   Search,
   SlidersHorizontal,
   Trash2,
-  UsersRound,
 } from "lucide-react";
 import {
   createColumnHelper,
@@ -122,10 +119,6 @@ type PrecisionProjectsProps = {
 };
 
 const columnHelper = createColumnHelper<WorkItem>();
-
-function delivered(project: WorkItem) {
-  return project.status === "Delivered";
-}
 
 function formatDate(value: string) {
   const date = new Date(`${value}T00:00:00`);
@@ -1280,47 +1273,6 @@ export function PrecisionProjects(props: PrecisionProjectsProps) {
         </motion.div>
       </WorkspacePage>
     </MotionConfig>
-  );
-}
-
-function Metric({
-  icon: Icon,
-  label,
-  value,
-  reduceMotion,
-}: {
-  icon: typeof FolderKanban;
-  label: string;
-  value: number;
-  reduceMotion: boolean | null;
-}) {
-  return (
-    <motion.div
-      layout
-      className="group flex min-h-[76px] items-center gap-2.5 px-3 py-3 transition-colors hover:bg-[var(--app-hover)]"
-    >
-      <motion.span
-        whileHover={reduceMotion ? undefined : { scale: 1.04 }}
-        className="grid size-8 place-items-center rounded-md bg-[var(--app-soft-panel)] text-[var(--app-muted)]"
-      >
-        <Icon className="size-4" />
-      </motion.span>
-      <span>
-        <span className="block text-[10px] text-[var(--app-muted)]">
-          {label}
-        </span>
-        <span className="relative mt-0.5 block h-7 overflow-hidden text-xl font-semibold tabular-nums">
-          <motion.span
-            key={value}
-            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="block"
-          >
-            {value}
-          </motion.span>
-        </span>
-      </span>
-    </motion.div>
   );
 }
 
