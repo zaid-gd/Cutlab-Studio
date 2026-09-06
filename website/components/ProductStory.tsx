@@ -94,7 +94,7 @@ const plans = [
     description: "For freelance editors running their business in Relay.",
     features: [
       "Everything in Free",
-      "5 GB for uploaded videos",
+      "5 GB of upload storage",
       "Comments on uploaded videos",
       "Custom workflow templates",
       "Salary plans and advanced reports",
@@ -113,12 +113,12 @@ const plans = [
     features: [
       "Everything in Creator",
       "Three editing seats",
-      "15 GB for shared video uploads",
+      "15 GB of shared upload storage",
       "Roles and project assignments",
       "Team payouts and workload reports",
       "Free viewer access",
     ],
-    note: "Extra editor seats cost $5/month and add 2 GB for shared video uploads.",
+    note: "Extra editor seats cost $5/month and add 2 GB of shared upload storage.",
     cta: "Join the waitlist",
   },
 ] as const;
@@ -402,8 +402,9 @@ export default function ProductStory() {
           <p className="story-index">02 / Client review</p>
           <h2 className="story-title">Feedback, on the frame.</h2>
           <p>
-            Clients comment on the exact moment in an uploaded video. Comments
-            are not available on embedded videos.
+            Clients open a password-protected shared link, with no account
+            needed. They can comment on uploaded videos, but not embedded
+            videos.
           </p>
         </div>
 
@@ -739,7 +740,9 @@ export default function ProductStory() {
           <SectionTitle>Plans for launch.</SectionTitle>
           <p>
             Early access storage, limits, and features may differ from these
-            planned tiers.
+            planned tiers. Storage covers uploaded images, files, and videos.
+            Embedded videos stay with the third-party host and do not count
+            toward your storage limit.
           </p>
         </div>
         <div className="pricing-grid">
