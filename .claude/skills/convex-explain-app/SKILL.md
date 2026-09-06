@@ -3,7 +3,9 @@ name: convex-explain-app
 description: "Explain an existing Convex app — data model + relationships, public vs internal functions, auth/ownership model, components, a request→data flow — read from the schema and function surface. Read-only."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/explain-app.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Explain this Convex app
 

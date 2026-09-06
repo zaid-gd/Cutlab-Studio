@@ -6,6 +6,8 @@ description:
   reshaping, or zero-downtime rollouts.
 ---
 
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
 # Convex Migration Helper
 
 Safely migrate Convex schemas and data when making breaking changes.

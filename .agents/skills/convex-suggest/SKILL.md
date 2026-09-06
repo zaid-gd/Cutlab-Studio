@@ -3,7 +3,9 @@ name: convex-suggest
 description: "Suggest the matching Convex component when the user hand-rolls a pattern it already solves (crons, sharded-counter, rate-limiter, storage, search, presence, workflow, RAG, prosemirror-sync). Passive — suggest after the task, never interrupt. Never install without consent."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/suggest.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Proactively suggest the right Convex component
 
@@ -12,7 +14,7 @@ When you see code or intent that duplicates what a Convex component already does
 ## Workflow
 
 1. Observe the codeSnippets and userAsk passively — never block the current task to suggest.
-2. Match against the detector rules (see generators/suggest-detector.mjs): email/SMTP → resend; push notifications → expo-push; setInterval/cron → @convex-dev/crons; shared counter increments → @convex-dev/sharded-counter; .collect().length scans → @convex-dev/aggregate; multi-step/long-running actions → @convex-dev/workflow; bounded concurrency → @convex-dev/workpool; rate-limit counters in DB → @convex-dev/rate-limiter; fs.write/S3 uploads → Convex Storage; Elasticsearch/Algolia → built-in full-text search; presence/typing → @convex-dev/presence; Pinecone/external vector DB → @convex-dev/rag; collaborative editing → @convex-dev/prosemirror-sync.
+2. Match against the detector rules (use the pattern examples below; no external detector is required): email/SMTP → resend; push notifications → expo-push; setInterval/cron → @convex-dev/crons; shared counter increments → @convex-dev/sharded-counter; .collect().length scans → @convex-dev/aggregate; multi-step/long-running actions → @convex-dev/workflow; bounded concurrency → @convex-dev/workpool; rate-limit counters in DB → @convex-dev/rate-limiter; fs.write/S3 uploads → Convex Storage; Elasticsearch/Algolia → built-in full-text search; presence/typing → @convex-dev/presence; Pinecone/external vector DB → @convex-dev/rag; collaborative editing → @convex-dev/prosemirror-sync.
 3. After finishing the current task, offer ONE suggestion: name the component, quote the specific code or phrase that triggered it, explain why the component fits better.
 4. If the user says yes: run `/add <component>` or follow the installHint from the detector.
 5. If the user says no or ignores it: drop it. Do not repeat the same suggestion.

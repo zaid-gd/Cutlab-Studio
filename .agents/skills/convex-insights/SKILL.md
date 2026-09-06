@@ -3,7 +3,7 @@ name: convex-insights
 description: "Query a running Convex app's logs + health in natural language (official MCP): failures, slow/expensive functions, deploy causality — scoped, evidence-backed, with a dashboard deep link."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/convex-insights.json — do not edit by hand. -->
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Query logs + health in natural language
 
@@ -20,7 +20,7 @@ The deployment already records what happened; the agent just has to ask well. Th
 4. SCOPE by fetching a bounded recent window (a sensible `--history` count) and filtering client-side to the function/status/requestId asked about; when the window is large, aggregate (counts by function/message) rather than dumping lines.
 5. ANSWER with (a) the one-line finding, (b) the evidence (counts + one representative stack/log line), and (c) WHEN POSSIBLE an agent-constructed dashboard deep link (dashboard.convex.dev, the deployment's Logs/Functions view) for human verification — no tool returns the link, so build it from the deployment name + function; never a raw log dump as the answer.
 6. CROSS-CHECK deploy causality when asked 'did my deploy break this': compare the failure onset (from the log timestamps) against the deployment version from `status`; correlate, don't assert.
-7. HAND OFF, don't fix here: a perf/cost cause → convex-advisor (which owns those fixes); a code defect → convex-reviewer/convex-authz; a live error to react to going forward → monitor/sentinel. Emit findings on the bus (specs/finding.schema.json) — primarily `observability`, with perf/cost as pointer findings to advisor — so a composite pass can pick them up.
+7. HAND OFF, don't fix here: a perf/cost cause → convex-advisor (which owns those fixes); a code defect → convex-reviewer/convex-authz; a live error to react to going forward → monitor/sentinel. Emit findings in the local report (../CONVEX-WORKFLOWS.md) — primarily `observability`, with perf/cost as pointer findings to advisor — so a composite pass can pick them up.
 
 ## Rules
 

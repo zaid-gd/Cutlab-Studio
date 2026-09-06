@@ -3,7 +3,9 @@ name: convex-domains
 description: "Point a domain you already own at your Convex app (DNS records, custom-domain attach, auth-origin rebind)."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/domains.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Set up a custom domain with your own provider
 

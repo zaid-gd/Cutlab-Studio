@@ -3,7 +3,9 @@ name: convex-env
 description: "Set and wire Convex deployment env vars / secrets for the app."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/env.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Manage env vars + secrets
 

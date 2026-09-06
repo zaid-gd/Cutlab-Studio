@@ -1,11 +1,15 @@
 ---
 name: convex-auth
-description: "Add authentication (passkeys/OAuth) to the current Convex app, including the auth.config.ts wiring."
+description: "Wire Convex Auth when that provider is already selected; use convex-setup-auth for provider selection."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/auth.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Add sign-in to the app
+
+Use this recipe only when Convex Auth is the chosen provider. Preserve an existing provider; consult `convex-setup-auth` when the choice is unresolved. Deployment env writes still require an identified, authorized target.
 
 Install and wire @convex-dev/auth for the current app: a provider (passkeys by default, or OAuth/password), the server config, the client hooks, and a sign-in UI — correctly, including the auth.config.ts that's the #1 real-world auth footgun.
 

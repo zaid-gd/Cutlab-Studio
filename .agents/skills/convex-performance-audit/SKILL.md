@@ -6,6 +6,8 @@ description:
   read amplification.
 ---
 
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
 # Convex Performance Audit
 
 Diagnose and fix performance problems in Convex applications, one problem class

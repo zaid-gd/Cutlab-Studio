@@ -3,7 +3,9 @@ name: convex-sentinel
 description: "Set up Sentinel production error capture in your own Convex deployment."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/sentinel.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Capture production errors in your own deployment
 

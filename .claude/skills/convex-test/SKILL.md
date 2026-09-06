@@ -3,7 +3,9 @@ name: convex-test
 description: "Generate convex-test tests for the app's Convex functions."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/test.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Generate Convex tests
 

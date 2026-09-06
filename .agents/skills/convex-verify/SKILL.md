@@ -3,7 +3,7 @@ name: convex-verify
 description: "Prove a Convex feature works — seed, drive as multiple mocked users via convex-test, assert behavior including the negative authz cases (wrong user refused, data-scope enforced)."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/convex-verify.json — do not edit by hand. -->
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Prove a feature works — seed, drive, assert
 
@@ -19,7 +19,7 @@ A green typecheck proves the code parses; it does not prove a non-owner is actua
    - positive: the owner gets the expected rows / the mutation made the expected change (`expect(await t.withIdentity(owner).query(api.x.y, args)).toEqual(...)`).
    - NEGATIVE (the load-bearing half): a different user calling the same function is REFUSED — `await expect(t.withIdentity(other).mutation(api.x.cancel, {id})).rejects.toThrow(/forbidden|not authorized|403/)` — and an unauthenticated caller is refused where auth is required. A feature is not proven until the wrong caller is shown to be blocked.
    - data-scope: a list/query returns ONLY the caller's rows, never the second user's (assert the second user's row is absent).
-6. RUN the tests (`npx vitest run`) and report: what was proven (each positive + negative assertion that passed), and — critically — any assertion that FAILED, because a failed negative assertion is a real authz hole found before ship. Emit findings on the bus (specs/finding.schema.json, class authz/correctness, evidence kind probe-result with the exact failing call) for anything that didn't behave.
+6. RUN the tests (`npx vitest run`) and report: what was proven (each positive + negative assertion that passed), and — critically — any assertion that FAILED, because a failed negative assertion is a real authz hole found before ship. Emit findings in the local report (../CONVEX-WORKFLOWS.md, class authz/correctness, evidence kind probe-result with the exact failing call) for anything that didn't behave.
 7. Do NOT weaken a test to make it pass: if the owner-only query returns another user's row, the FIX is in the function (hand to convex-authz), not in the assertion. A test changed until it's green proves nothing.
 
 ## Rules

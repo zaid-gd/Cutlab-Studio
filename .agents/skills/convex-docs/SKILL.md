@@ -3,7 +3,9 @@ name: convex-docs
 description: "Pull version-current Convex docs for the version this project uses — pin the installed version, fetch page-as-markdown or check node_modules types, freshness hierarchy — instead of writing a possibly-stale API from memory."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/convex-docs.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Pull version-current Convex docs
 

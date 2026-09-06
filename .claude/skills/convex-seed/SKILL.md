@@ -3,7 +3,9 @@ name: convex-seed
 description: "Seed or import data into the Convex database."
 ---
 
-<!-- GENERATED from convex-agents content/capabilities/seed.json — do not edit by hand. -->
+Follow [the local workflow contract](../CONVEX-WORKFLOWS.md) for scope, authorization, and reporting.
+
+<!-- Locally maintained adaptation of Convex agent guidance; sync from .agents with scripts/sync-convex-skills.py. -->
 
 # Seed / import data
 
