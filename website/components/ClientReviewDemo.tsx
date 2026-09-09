@@ -137,6 +137,7 @@ export default function ClientReviewDemo() {
         <div className="review-room-grid">
           <div className="review-player">
             <video
+              aria-label="Sample client review video"
               ref={videoRef}
               src="/videos/client-review-city.mp4"
               preload="metadata"

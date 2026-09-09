@@ -2525,7 +2525,7 @@ h1 span {
   }
 
   .review-story {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .review-heading {

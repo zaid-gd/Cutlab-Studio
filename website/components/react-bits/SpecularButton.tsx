@@ -375,6 +375,7 @@ export default function SpecularButton(props: SpecularButtonProps) {
         onClick={(event) => {
           if (
             props.href?.startsWith("/") &&
+            !event.altKey &&
             !event.ctrlKey &&
             !event.metaKey &&
             !event.shiftKey

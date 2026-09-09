@@ -40,7 +40,7 @@ export default function Home() {
           Skip to main content
         </a>
 
-        <header className="site-header" style={{ width: "90vw", height: 68 }}>
+        <header className="site-header" style={{ width: "90%", height: 68 }}>
           <a className="brand" href="#top" aria-label="Relay home">
             <Image
               src="/brand/relay/lockup-accent.svg"
