@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 
@@ -108,6 +114,7 @@ void main() {
 
 export default function SpecularButton(props: SpecularButtonProps) {
   const router = useRouter();
+  const [hovered, setHovered] = useState(false);
   const {
     children,
     className = "",
@@ -159,15 +166,22 @@ export default function SpecularButton(props: SpecularButtonProps) {
   useEffect(() => {
     const button = buttonRef.current;
     const effect = effectRef.current;
-    if (!button || !effect) return;
+    if (!button || !effect || !hovered || props.disabled) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({
-      alpha: true,
-      premultipliedAlpha: true,
-      antialias: true,
-      dpr,
-    });
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: true,
+        dpr,
+      });
+    } catch {
+      // Keep the button usable on devices without WebGL.
+      return;
+    }
     const gl = renderer.gl;
     let contextLost = false;
     const handleContextLost = (event: Event) => {
@@ -222,9 +236,10 @@ export default function SpecularButton(props: SpecularButtonProps) {
     resizeObserver.observe(button);
     resize();
 
-    let pointerAngle: number | null = null;
-    let proximityAmount = 0;
+    let pointerAngle: number | null = 2.4;
+    let proximityAmount = 1;
     const handlePointerMove = (event: PointerEvent) => {
+      rect = button.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const deltaX = Math.max(
@@ -258,7 +273,7 @@ export default function SpecularButton(props: SpecularButtonProps) {
       proximityAmount = amount * amount * (3 - 2 * amount);
       if (frame === null) frame = requestAnimationFrame(update);
     };
-    window.addEventListener("pointermove", handlePointerMove);
+    button.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("scroll", resize, { passive: true });
 
     const lineColorValue = new Color();
@@ -312,8 +327,8 @@ export default function SpecularButton(props: SpecularButtonProps) {
 
       if (
         current.autoAnimate ||
-        brightness > 0.001 ||
-        (current.autoAnimate && Math.abs(difference) > 0.001)
+        Math.abs(brightnessTarget - brightness) > 0.001 ||
+        (brightness > 0.001 && Math.abs(difference) > 0.001)
       ) {
         frame = requestAnimationFrame(update);
       }
@@ -323,13 +338,13 @@ export default function SpecularButton(props: SpecularButtonProps) {
     return () => {
       if (frame !== null) cancelAnimationFrame(frame);
       resizeObserver.disconnect();
-      window.removeEventListener("pointermove", handlePointerMove);
+      button.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("scroll", resize);
       gl.canvas.removeEventListener("webglcontextlost", handleContextLost);
       if (gl.canvas.parentNode === effect) effect.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
+  }, [hovered, props.disabled]);
 
   const style: SpecularStyle = {
     "--sb-radius": `${radius}px`,
@@ -368,6 +383,8 @@ export default function SpecularButton(props: SpecularButtonProps) {
             router.push(props.href);
           }
         }}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
         className={elementClassName}
         style={style}
       >
@@ -383,6 +400,8 @@ export default function SpecularButton(props: SpecularButtonProps) {
       }}
       type={props.type ?? "button"}
       disabled={props.disabled}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
       className={elementClassName}
       style={style}
     >

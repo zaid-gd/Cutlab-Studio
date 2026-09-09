@@ -5,7 +5,7 @@ export const siteUrl =
 
 export const siteTitle = "Relay | Production workspace for video editors";
 export const siteDescription =
-  "Relay helps freelance video editors and small teams plan work, manage review, and deliver.";
+  "Track editing projects and deadlines, collect client feedback on uploaded videos through password-protected links, and manage delivery.";
 
 export const siteOpenGraph = {
   title: siteTitle,

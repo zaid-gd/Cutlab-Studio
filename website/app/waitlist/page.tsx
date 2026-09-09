@@ -33,11 +33,10 @@ export default function WaitlistPage() {
 
       <section className="waitlist-layout" aria-labelledby="waitlist-title">
         <div className="waitlist-intro">
-          <p className="eyebrow">Relay early access</p>
           <h1 id="waitlist-title">Test Relay before launch.</h1>
           <p>
-            Join the waitlist to test the production workspace. Selected testers
-            receive an email invite.
+            Join the waitlist to try project tracking, client reviews, and
+            delivery. Selected testers receive an email invite.
           </p>
         </div>
 

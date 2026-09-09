@@ -7,66 +7,15 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Download,
   FileVideo,
   FolderKanban,
   MessageSquare,
-  Pause,
-  Play,
-  Upload,
-  Volume2,
-  VolumeX,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import SiteButton from "./SiteButton";
-import Stepper, { Step } from "./react-bits/Stepper";
-
-const workflowStages = ["Plan", "Edit", "Client review", "Deliver"] as const;
-
-const formatTime = (seconds: number) =>
-  `${Math.floor(seconds / 60)
-    .toString()
-    .padStart(2, "0")}:${Math.floor(seconds % 60)
-    .toString()
-    .padStart(2, "0")}`;
-
-const comments = [
-  {
-    id: 1,
-    author: "Maya Chen",
-    time: "00:07",
-    text: "Can we hold this shot for half a second longer?",
-    seconds: 7,
-  },
-  {
-    id: 2,
-    author: "Jordan Patel",
-    time: "00:16",
-    text: "Love the pace here.",
-    seconds: 16,
-  },
-  {
-    id: 3,
-    author: "Alex Rivera",
-    time: "00:24",
-    text: "Let's brighten the midtones just a touch.",
-    seconds: 24,
-  },
-  {
-    id: 4,
-    author: "Samir Khan",
-    time: "00:38",
-    text: "Can we soften the highlights on the road?",
-    seconds: 38,
-  },
-] as const;
-
-const deliverySteps = [
-  { label: "Export master", status: "Master file ready", icon: Download },
-  { label: "Upload review", status: "Review version online", icon: Upload },
-  { label: "Client approval", status: "Approved by Maya", icon: MessageSquare },
-  { label: "Final delivery", status: "Handoff confirmed", icon: CheckCircle2 },
-] as const;
+import WorkflowDemo from "./WorkflowDemo";
+import ClientReviewDemo from "./ClientReviewDemo";
+import DeliveryDemo from "./DeliveryDemo";
 
 const plans = [
   {
@@ -253,320 +202,18 @@ function SectionTitle({ children }: { children: string }) {
 }
 
 export default function ProductStory() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [commentId, setCommentId] = useState<number | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [deliveryStep, setDeliveryStep] = useState(3);
   const [proofFilter, setProofFilter] = useState("All events");
   const [proofWeek, setProofWeek] = useState(1);
-  const comment = comments.find((item) => item.id === commentId);
   const visibleProofEvents =
     proofFilter === "All events"
       ? proofEvents
       : proofEvents.filter((event) => event.kind === proofFilter);
 
-  const togglePlayback = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) void video.play();
-    else video.pause();
-  };
-
-  const selectComment = (id: number, seconds: number) => {
-    setCommentId(id);
-    if (videoRef.current) videoRef.current.currentTime = seconds;
-  };
-
   return (
     <div className="product-story">
-      <section
-        className="story-section workflow-story"
-        id="workflow"
-        aria-label="Workflow"
-      >
-        <div className="story-heading">
-          <p className="story-index">01 / Workflow</p>
-          <SectionTitle>One production line.</SectionTitle>
-          <p>
-            Move from plan to delivery without rebuilding context at every
-            handoff.
-          </p>
-        </div>
-
-        <Stepper
-          className="workflow-stepper"
-          role="group"
-          aria-label="Production stages"
-          initialStep={2}
-          stepCircleContainerClassName="workflow-stepper-shell"
-          stepContainerClassName="workflow-stepper-nav"
-          contentClassName="workflow-stepper-content"
-          footerClassName="workflow-stepper-footer"
-          showFooter={false}
-          renderStepIndicator={({ step, currentStep, onStepClick }) => (
-            <button
-              type="button"
-              className={step === currentStep ? "is-active" : ""}
-              onClick={() => onStepClick(step)}
-              aria-current={step === currentStep ? "step" : undefined}
-            >
-              <small>0{step}</small>
-              {workflowStages[step - 1]}
-            </button>
-          )}
-        >
-          <Step>
-            <div className="stage-ledger">
-              <div className="mini-bar">
-                <strong>Project ledger</strong>
-                <span>3 projects</span>
-              </div>
-              {[
-                "Summer launch film",
-                "Founder story cutdown",
-                "Field Notes episode 12",
-              ].map((project, index) => (
-                <div
-                  key={project}
-                  className={`stage-project${index === 1 ? " is-current" : ""}`}
-                >
-                  <span>
-                    <i />
-                    {project}
-                  </span>
-                  <small>
-                    {index === 0 ? "May 5" : index === 1 ? "May 7" : "May 8"}
-                  </small>
-                </div>
-              ))}
-            </div>
-          </Step>
-          <Step>
-            <div className="mini-timeline" aria-hidden="true">
-              <div className="mini-time">
-                <span>00:00</span>
-                <span>01:12</span>
-              </div>
-              <div className="mini-track track-video">
-                {["Wide frame", "Close frame", "End frame"].map((frame) => (
-                  <span key={frame}>
-                    <Image
-                      src="/images/runner-night-frame.png"
-                      alt=""
-                      fill
-                      sizes="33vw"
-                    />
-                  </span>
-                ))}
-              </div>
-              <div className="mini-track track-audio" />
-              <div className="mini-playhead" />
-            </div>
-          </Step>
-          <Step>
-            <div className="stage-notes">
-              <div className="mini-bar">
-                <strong>Client review</strong>
-                <span>3 notes</span>
-              </div>
-              <p>
-                <b>00:18</b> Hold the wide shot.
-              </p>
-              <p>
-                <b>00:37</b> Tighten transition.
-              </p>
-              <p>
-                <Check size={12} /> Final frame approved.
-              </p>
-            </div>
-          </Step>
-          <Step>
-            <div className="stage-delivery">
-              <CheckCircle2 size={22} />
-              <strong>Final_v12.mp4</strong>
-              <span>Ready to deliver</span>
-            </div>
-          </Step>
-        </Stepper>
-      </section>
-
-      <section
-        className="story-section review-story"
-        id="client-review"
-        aria-label="Client review"
-      >
-        <div className="review-heading">
-          <p className="story-index">02 / Client review</p>
-          <h2 className="story-title">Feedback, on the frame.</h2>
-          <p>
-            Clients open a password-protected shared link, with no account
-            needed. They can comment on uploaded videos, but not embedded
-            videos.
-          </p>
-        </div>
-
-        <div className="review-room">
-          <div className="review-room-bar">
-            <span>
-              <Image
-                src="/brand/relay/mark-accent.svg"
-                alt=""
-                width={20}
-                height={20}
-              />
-              Relay
-            </span>
-            <strong>Demo / v4 client review</strong>
-            <span>{comments.length} comments</span>
-          </div>
-          <div className="review-room-grid">
-            <div className="review-player">
-              <video
-                ref={videoRef}
-                src="/videos/client-review-city.mp4"
-                preload="metadata"
-                playsInline
-                muted={muted}
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-                onTimeUpdate={(event) =>
-                  setCurrentTime(event.currentTarget.currentTime)
-                }
-                onLoadedMetadata={(event) => {
-                  const nextDuration = event.currentTarget.duration;
-                  if (Number.isFinite(nextDuration)) setDuration(nextDuration);
-                }}
-              />
-              {comment && (
-                <div className="frame-note">
-                  <span>
-                    {comment.time} · {comment.author}
-                  </span>
-                  {comment.text}
-                </div>
-              )}
-              <div className="review-controls">
-                <button
-                  type="button"
-                  onClick={togglePlayback}
-                  aria-label={playing ? "Pause video" : "Play video"}
-                >
-                  {playing ? <Pause size={16} /> : <Play size={16} />}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMuted((value) => !value)}
-                  aria-label={muted ? "Unmute video" : "Mute video"}
-                >
-                  {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                </button>
-                <span>{formatTime(currentTime)}</span>
-                <input
-                  type="range"
-                  min={0}
-                  max={duration}
-                  step={0.1}
-                  value={currentTime}
-                  aria-label="Video position"
-                  onChange={(event) => {
-                    const nextTime = Number(event.currentTarget.value);
-                    setCurrentTime(nextTime);
-                    if (videoRef.current)
-                      videoRef.current.currentTime = nextTime;
-                  }}
-                />
-                <span>{formatTime(duration)}</span>
-              </div>
-            </div>
-            <aside
-              className="review-comments"
-              aria-label="Client review comments"
-            >
-              <header>
-                <span>Comments</span>
-                <small>{comments.length} open</small>
-              </header>
-              {comments.map((item) => (
-                <button
-                  className={commentId === item.id ? "is-active" : ""}
-                  key={item.id}
-                  type="button"
-                  aria-pressed={commentId === item.id}
-                  onClick={() => selectComment(item.id, item.seconds)}
-                >
-                  <span>
-                    {item.author}
-                    <small>{item.time}</small>
-                  </span>
-                  <p>{item.text}</p>
-                </button>
-              ))}
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="story-section delivery-story"
-        id="delivery"
-        aria-label="Delivery"
-      >
-        <div className="delivery-copy">
-          <p className="story-index">03 / Delivery</p>
-          <div
-            className="delivery-rail"
-            role="group"
-            aria-label="Delivery progress"
-          >
-            {deliverySteps.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  className={`${index <= deliveryStep ? "is-complete" : ""}${index === deliveryStep ? " is-active" : ""}`}
-                  aria-pressed={index === deliveryStep}
-                  onClick={() => setDeliveryStep(index)}
-                >
-                  <span className="delivery-step-icon">
-                    <Icon size={15} />
-                  </span>
-                  <span className="delivery-step-copy">
-                    <strong>{item.label}</strong>
-                    <small>
-                      {index <= deliveryStep ? item.status : "Pending"}
-                    </small>
-                  </span>
-                  <Check className="delivery-step-check" size={14} />
-                </button>
-              );
-            })}
-          </div>
-          <SectionTitle>Ship the right cut.</SectionTitle>
-          <p>One visible path from export to a confirmed handoff.</p>
-        </div>
-        <div className="delivery-preview">
-          <div className="delivery-frame" aria-hidden="true">
-            <Image
-              className="delivery-image"
-              src="/images/final-delivery-studio.png"
-              alt=""
-              fill
-              sizes="(max-width: 980px) 100vw, 65vw"
-            />
-          </div>
-          <div className="delivery-status">
-            <span>
-              <CheckCircle2 size={16} /> {deliverySteps[deliveryStep].label}
-            </span>
-            <strong>Final_v12.mp4</strong>
-            <small>{deliverySteps[deliveryStep].status}</small>
-          </div>
-        </div>
-      </section>
+      <WorkflowDemo />
+      <ClientReviewDemo />
+      <DeliveryDemo />
 
       <section
         className="story-section proof-story"
@@ -574,11 +221,9 @@ export default function ProductStory() {
         aria-label="Activity tracking"
       >
         <div className="story-heading">
-          <p className="story-index">04 / Activity</p>
-          <SectionTitle>See what moved.</SectionTitle>
+          <SectionTitle>Project updates and deadlines.</SectionTitle>
           <p>
-            Recent changes and the week ahead stay visible without another
-            status meeting.
+            Follow project changes, review activity, and upcoming deadlines.
           </p>
         </div>
         <div className="proof-workspace">
@@ -736,8 +381,7 @@ export default function ProductStory() {
         aria-label="Pricing"
       >
         <div className="story-heading">
-          <p className="story-index">05 / Pricing</p>
-          <SectionTitle>Plans for launch.</SectionTitle>
+          <SectionTitle>Planned pricing.</SectionTitle>
           <p>
             Early access storage, limits, and features may differ from these
             planned tiers. Storage covers uploaded images, files, and videos.
@@ -798,12 +442,12 @@ export default function ProductStory() {
                 height={50}
               />
             </a>
-            <h2>Keep the next cut moving.</h2>
+            <h2>Organize your next editing project.</h2>
           </div>
           <div className="footer-action">
             <p>
-              Projects, client notes, approvals, and delivery in one production
-              workspace.
+              Manage projects, review uploaded videos with clients, and track
+              delivery in Relay.
             </p>
             <SiteButton href="/waitlist">
               Join the waitlist <ArrowRight size={17} />

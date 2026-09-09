@@ -3,18 +3,14 @@
 import Image from "next/image";
 import {
   ArrowRight,
-  Bell,
   CalendarDays,
   CheckCircle2,
   FolderKanban,
   LayoutGrid,
   MessageSquare,
-  MoreHorizontal,
   Plus,
   Search,
-  Settings,
   SlidersHorizontal,
-  Users,
   Workflow,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -25,10 +21,11 @@ type Project = {
   id: string;
   name: string;
   type: string;
-  dueDate: string;
+  dueDate: string | null;
   status: ProjectStatus;
   progress: number;
-  value: string;
+  value: number | null;
+  paid: number;
   priority: "Low" | "Medium";
   client: string;
   order: number;
@@ -39,10 +36,11 @@ const seedProjects: Project[] = [
     id: "summer-launch",
     name: "Summer launch film",
     type: "Client project",
-    dueDate: "May 5",
+    dueDate: "2025-05-05",
     status: "In progress",
     progress: 72,
-    value: "$1,800",
+    value: 1800,
+    paid: 0,
     priority: "Medium",
     client: "Aperture Coffee",
     order: 5,
@@ -51,10 +49,11 @@ const seedProjects: Project[] = [
     id: "founder-story",
     name: "Founder story cutdown",
     type: "Client project",
-    dueDate: "May 7",
+    dueDate: "2025-05-07",
     status: "Review",
     progress: 86,
-    value: "$950",
+    value: 950,
+    paid: 0,
     priority: "Medium",
     client: "Orbit Labs",
     order: 4,
@@ -63,10 +62,11 @@ const seedProjects: Project[] = [
     id: "field-notes",
     name: "Field Notes episode 12",
     type: "Client project",
-    dueDate: "May 8",
+    dueDate: "2025-05-08",
     status: "Delivered",
     progress: 100,
-    value: "$1,200",
+    value: 1200,
+    paid: 1200,
     priority: "Low",
     client: "Field Notes",
     order: 3,
@@ -75,10 +75,11 @@ const seedProjects: Project[] = [
     id: "campaign-cutdowns",
     name: "Campaign cutdowns",
     type: "Client project",
-    dueDate: "May 2",
+    dueDate: "2025-05-02",
     status: "Delivered",
     progress: 100,
-    value: "$760",
+    value: 760,
+    paid: 760,
     priority: "Low",
     client: "Aperture Coffee",
     order: 2,
@@ -87,10 +88,11 @@ const seedProjects: Project[] = [
     id: "product-teaser",
     name: "Product teaser",
     type: "Client project",
-    dueDate: "Apr 29",
+    dueDate: "2025-04-29",
     status: "Review",
     progress: 91,
-    value: "$1,050",
+    value: 1050,
+    paid: 0,
     priority: "Medium",
     client: "Orbit Labs",
     order: 1,
@@ -111,13 +113,25 @@ const teamActivity = [
 ];
 
 const sidebarItems = [
-  { label: "Dashboard", icon: LayoutGrid },
-  { label: "Calendar", icon: CalendarDays },
-  { label: "Workflow", icon: Workflow },
-  { label: "Projects", icon: FolderKanban },
-  { label: "Team", icon: Users },
-  { label: "Messages", icon: MessageSquare },
+  { label: "Dashboard demo", icon: LayoutGrid, href: "#product" },
+  { label: "Projects", icon: FolderKanban, href: "#demo-projects" },
+  { label: "Workflow demo", icon: Workflow, href: "#workflow" },
+  { label: "Client review demo", icon: MessageSquare, href: "#client-review" },
+  { label: "Activity and deadlines", icon: CalendarDays, href: "#proof" },
 ];
+
+const currency = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
+const formatDueDate = (date: Project["dueDate"]) =>
+  date ? dateFormat.format(new Date(date)) : "No date";
 
 export default function InteractiveDashboard() {
   const [projects, setProjects] = useState(seedProjects);
@@ -127,7 +141,6 @@ export default function InteractiveDashboard() {
   const [activityScope, setActivityScope] = useState<"Recent" | "Team">(
     "Recent"
   );
-  const [activeSection, setActiveSection] = useState("Dashboard");
   const [selectedId, setSelectedId] = useState(seedProjects[0].id);
   const [notice, setNotice] = useState("");
 
@@ -144,13 +157,29 @@ export default function InteractiveDashboard() {
   }, [projects, query, sort, status]);
 
   const selectedProject =
-    projects.find((project) => project.id === selectedId) ?? projects[0];
+    visibleProjects.find((project) => project.id === selectedId) ??
+    visibleProjects[0];
   const waitingReviews = projects.filter(
     (project) => project.status === "Review"
   ).length;
   const deliveredProjects = projects.filter(
     (project) => project.status === "Delivered"
   ).length;
+  const upcomingProjects = projects.filter(
+    (project) =>
+      project.status !== "Delivered" &&
+      project.dueDate !== null &&
+      project.dueDate >= "2025-05-05" &&
+      project.dueDate <= "2025-05-11"
+  ).length;
+  const collected = projects.reduce(
+    (total, project) => total + project.paid,
+    0
+  );
+  const outstanding = projects.reduce(
+    (total, project) => total + (project.value ?? 0) - project.paid,
+    0
+  );
   const activity = activityScope === "Recent" ? recentActivity : teamActivity;
 
   const createProject = () => {
@@ -158,16 +187,20 @@ export default function InteractiveDashboard() {
       id: `untitled-${projects.length + 1}`,
       name: "Untitled edit",
       type: "Client project",
-      dueDate: "No date",
+      dueDate: null,
       status: "In progress",
       progress: 0,
-      value: "Pending",
+      value: null,
+      paid: 0,
       priority: "Medium",
       client: "No client",
       order: projects.length + 1,
     };
     setProjects((current) => [project, ...current]);
     setSelectedId(project.id);
+    setQuery("");
+    setStatus("All");
+    setSort("Newest");
     setNotice("Draft project created");
   };
 
@@ -186,30 +219,17 @@ export default function InteractiveDashboard() {
           {sidebarItems.map((item) => {
             const Icon = item.icon;
             return (
-              <button
-                className={activeSection === item.label ? "is-active" : ""}
-                type="button"
+              <a
                 key={item.label}
+                href={item.href}
                 aria-label={item.label}
-                aria-pressed={activeSection === item.label}
-                onClick={() => {
-                  setActiveSection(item.label);
-                  setNotice(`${item.label} selected`);
-                }}
+                title={item.label}
               >
                 <Icon size={15} strokeWidth={1.7} />
-              </button>
+              </a>
             );
           })}
         </nav>
-        <button
-          className="demo-settings"
-          type="button"
-          aria-label="Settings"
-          onClick={() => setNotice("Settings selected")}
-        >
-          <Settings size={15} strokeWidth={1.7} />
-        </button>
       </aside>
 
       <div className="demo-workspace">
@@ -234,25 +254,16 @@ export default function InteractiveDashboard() {
               <Plus size={14} />
               Quick create
             </button>
-            <button
-              className="demo-icon-button"
-              type="button"
-              aria-label="Notifications"
-              onClick={() => setNotice("No new notifications")}
-            >
-              <Bell size={15} />
-            </button>
           </div>
         </header>
 
         <div className="demo-main">
           <section className="demo-dashboard-heading">
             <div>
-              <span>Interactive demo / Sample data</span>
-              <h3>Good to see you, Maya.</h3>
+              <h3>Explore a sample workspace.</h3>
               <p>
-                Scan commitments, deadlines, handoffs, and earnings from one
-                focused production ledger.
+                Search or filter projects, select a row, or create a sample
+                project.
               </p>
             </div>
             <div className="demo-ledger-tools">
@@ -335,7 +346,7 @@ export default function InteractiveDashboard() {
 
           <section className="demo-metrics" aria-label="Production metrics">
             <div>
-              <span>In motion</span>
+              <span>In progress</span>
               <b>
                 {
                   projects.filter((project) => project.status === "In progress")
@@ -346,8 +357,8 @@ export default function InteractiveDashboard() {
             </div>
             <div>
               <span>Due May 5 to 11</span>
-              <b>2</b>
-              <small>upcoming handoffs</small>
+              <b>{upcomingProjects}</b>
+              <small>upcoming deliveries</small>
             </div>
             <div>
               <span>Waiting reviews</span>
@@ -356,8 +367,8 @@ export default function InteractiveDashboard() {
             </div>
             <div>
               <span>Collected</span>
-              <b>$2.1k</b>
-              <small>$2.8k due</small>
+              <b>{currency.format(collected)}</b>
+              <small>{currency.format(outstanding)} due</small>
             </div>
             <div>
               <span>Delivered</span>
@@ -366,7 +377,11 @@ export default function InteractiveDashboard() {
             </div>
           </section>
 
-          <section className="demo-ledger" aria-label="Project ledger">
+          <section
+            className="demo-ledger"
+            id="demo-projects"
+            aria-label="Project ledger"
+          >
             <div className="demo-ledger-header">
               <strong>Project ledger</strong>
               <span>{visibleProjects.length}</span>
@@ -384,10 +399,10 @@ export default function InteractiveDashboard() {
               {visibleProjects.length > 0 ? (
                 visibleProjects.map((project) => (
                   <button
-                    className={`demo-project-row${project.id === selectedProject.id ? " is-selected" : ""}`}
+                    className={`demo-project-row${project.id === selectedProject?.id ? " is-selected" : ""}`}
                     type="button"
                     key={project.id}
-                    aria-pressed={project.id === selectedProject.id}
+                    aria-pressed={project.id === selectedProject?.id}
                     onClick={() => setSelectedId(project.id)}
                   >
                     <span className="demo-project-name">
@@ -396,11 +411,11 @@ export default function InteractiveDashboard() {
                       </i>
                       <span>
                         <b>{project.name}</b>
-                        <small>No notes</small>
+                        <small>{project.client}</small>
                       </span>
                     </span>
                     <span>{project.type}</span>
-                    <span>{project.dueDate}</span>
+                    <span>{formatDueDate(project.dueDate)}</span>
                     <span>
                       <em data-status={project.status}>{project.status}</em>
                     </span>
@@ -410,9 +425,10 @@ export default function InteractiveDashboard() {
                         <b style={{ width: `${project.progress}%` }} />
                       </i>
                     </span>
-                    <span>{project.value}</span>
                     <span>
-                      <MoreHorizontal size={15} />
+                      {project.value === null
+                        ? "Not set"
+                        : currency.format(project.value)}
                     </span>
                   </button>
                 ))
@@ -422,56 +438,65 @@ export default function InteractiveDashboard() {
             </div>
           </section>
 
-          <aside className="demo-project-detail" aria-label="Selected project">
-            <div className="demo-detail-title">
-              <span>
-                <i />
-                {selectedProject.name}
-              </span>
-              <MoreHorizontal size={15} />
-            </div>
-            <em data-status={selectedProject.status}>
-              {selectedProject.status}
-            </em>
-            <dl>
-              <div>
-                <dt>Client</dt>
-                <dd>{selectedProject.client}</dd>
+          {selectedProject ? (
+            <aside
+              className="demo-project-detail"
+              aria-label="Selected project"
+            >
+              <div className="demo-detail-title">
+                <span>
+                  <i />
+                  {selectedProject.name}
+                </span>
               </div>
-              <div>
-                <dt>Type</dt>
-                <dd>{selectedProject.type}</dd>
+              <em data-status={selectedProject.status}>
+                {selectedProject.status}
+              </em>
+              <dl>
+                <div>
+                  <dt>Client</dt>
+                  <dd>{selectedProject.client}</dd>
+                </div>
+                <div>
+                  <dt>Type</dt>
+                  <dd>{selectedProject.type}</dd>
+                </div>
+                <div>
+                  <dt>Due date</dt>
+                  <dd>{formatDueDate(selectedProject.dueDate)}</dd>
+                </div>
+                <div>
+                  <dt>Priority</dt>
+                  <dd>{selectedProject.priority}</dd>
+                </div>
+              </dl>
+              <div className="demo-detail-progress">
+                <span>
+                  Progress <b>{selectedProject.progress}%</b>
+                </span>
+                <i>
+                  <b style={{ width: `${selectedProject.progress}%` }} />
+                </i>
               </div>
-              <div>
-                <dt>Due date</dt>
-                <dd>{selectedProject.dueDate}</dd>
+              <div className="demo-detail-action">
+                <span>
+                  <small>Value</small>
+                  <b>
+                    {selectedProject.value === null
+                      ? "Not set"
+                      : currency.format(selectedProject.value)}
+                  </b>
+                </span>
+                <a href="#workflow">
+                  View workflow <ArrowRight size={14} />
+                </a>
               </div>
-              <div>
-                <dt>Priority</dt>
-                <dd>{selectedProject.priority}</dd>
-              </div>
-            </dl>
-            <div className="demo-detail-progress">
-              <span>
-                Progress <b>{selectedProject.progress}%</b>
-              </span>
-              <i>
-                <b style={{ width: `${selectedProject.progress}%` }} />
-              </i>
-            </div>
-            <div className="demo-detail-action">
-              <span>
-                <small>Value</small>
-                <b>{selectedProject.value} tracked</b>
-              </span>
-              <button
-                type="button"
-                onClick={() => setNotice(`${selectedProject.name} opened`)}
-              >
-                Open <ArrowRight size={14} />
-              </button>
-            </div>
-          </aside>
+            </aside>
+          ) : (
+            <aside className="demo-project-detail demo-empty">
+              Select a matching project to view its details.
+            </aside>
+          )}
         </div>
       </div>
       {notice ? (

@@ -18,7 +18,7 @@ const contentSecurityPolicy = [
 
 const nextConfig = {
   turbopack: {
-    root: path.resolve(projectRoot, ".."),
+    root: projectRoot,
   },
   async headers() {
     return [

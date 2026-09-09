@@ -69,7 +69,6 @@ export default function WaitlistForm() {
         role="status"
         aria-live="polite"
       >
-        <p className="waitlist-kicker">Request received</p>
         <h2>You are on the list.</h2>
         <p>
           If selected, you will receive an invite at{" "}
@@ -87,7 +86,6 @@ export default function WaitlistForm() {
       aria-busy={state.kind === "submitting"}
     >
       <div className="waitlist-heading">
-        <p className="waitlist-kicker">Early access</p>
         <h2>Request an invite</h2>
         <p>We will contact selected testers by email.</p>
       </div>
