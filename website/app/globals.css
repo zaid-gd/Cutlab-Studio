@@ -1628,7 +1628,7 @@ h1 span {
 
 .review-story {
   display: grid;
-  width: min(100% - 64px, 1540px);
+  width: min(100% - 48px, 1240px);
   grid-template-columns: minmax(290px, 0.34fr) minmax(0, 1.66fr);
   align-items: start;
   gap: clamp(56px, 6vw, 96px);
@@ -2614,6 +2614,10 @@ h1 span {
 }
 
 @media (max-width: 700px) {
+  .waitlist-heading {
+    grid-template-columns: 1fr;
+  }
+
   .review-heading {
     gap: 20px;
     margin-bottom: 28px;
